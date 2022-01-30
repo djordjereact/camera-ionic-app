@@ -1,5 +1,20 @@
 import React from 'react';
-import {IonApp, IonText, setupIonicReact} from '@ionic/react';
+import {
+    IonApp,
+    IonRouterOutlet,
+    setupIonicReact,
+    IonTabs,
+    IonTabBar,
+    IonTabButton,
+    IonIcon,
+    IonLabel
+} from '@ionic/react';
+import { IonReactRouter } from "@ionic/react-router";
+import {Redirect, Route} from "react-router";
+import GoodMemories from "./pages/GoodMemories";
+import BadMemories from "./pages/BadMemories";
+import NewMemory from "./pages/NewMemory";
+import {happy, sad} from "ionicons/icons";
 
 /* Core CSS required for Ionic components to work properly */
 import '@ionic/react/css/core.css';
@@ -24,9 +39,32 @@ setupIonicReact();
 
 const App: React.FC = () => (
   <IonApp>
-    <IonText className="ion-text-center">
-      <h2>This works!</h2>
-    </IonText>
+    <IonReactRouter>
+        <IonTabs>
+        <IonRouterOutlet>
+            <Route path="/good-memories">
+                <GoodMemories />
+            </Route>
+            <Route path="/bad-memories">
+                <BadMemories />
+            </Route>
+            <Route path="/new-memory">
+                <NewMemory />
+            </Route>
+            <Redirect to="/good-memories" />
+        </IonRouterOutlet>
+            <IonTabBar slot="bottom">
+                <IonTabButton href="/good-memories" tab="good">
+                    <IonIcon icon={happy} />
+                    <IonLabel>Good Memories</IonLabel>
+                </IonTabButton>
+                <IonTabButton href="/bad-memories" tab="bad">
+                    <IonIcon icon={sad} />
+                     <IonLabel>Bad Memories</IonLabel>
+                </IonTabButton>
+            </IonTabBar>
+        </IonTabs>
+    </IonReactRouter>
   </IonApp>
 );
 
