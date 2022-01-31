@@ -1,7 +1,7 @@
 import React, { useContext } from 'react';
 import {
     IonButton,
-    IonButtons, IonCard, IonCardHeader, IonCardTitle, IonCol,
+    IonButtons, IonCol,
     IonContent, IonFab, IonFabButton, IonGrid,
     IonHeader,
     IonIcon,
@@ -12,6 +12,7 @@ import {
 } from "@ionic/react";
 import {add} from "ionicons/icons";
 import MemoriesContext from "../data/memories-context";
+import MemoriesList from "../components/MemoriesList";
 
 const GoodMemories: React.FC = () => {
     const memoriesCtx = useContext(MemoriesContext);
@@ -39,18 +40,7 @@ const GoodMemories: React.FC = () => {
                             <h2>No good memories found.</h2>
                         </IonCol>
                     </IonRow>}
-                    {goodMemories.map(memory =>
-                        <IonRow key={memory.id}>
-                            <IonCol>
-                                <IonCard>
-                                    <img src={memory.base64Url} alt={memory.title}/>
-                                    <IonCardHeader>
-                                        <IonCardTitle>{memory.title}</IonCardTitle>
-                                    </IonCardHeader>
-                                </IonCard>
-                            </IonCol>
-                        </IonRow>
-                    )}
+                    <MemoriesList items={goodMemories} />
                 </IonGrid>
                 {!isPlatform('ios') &&
                     <IonFab vertical="bottom" horizontal="end" slot="fixed">
