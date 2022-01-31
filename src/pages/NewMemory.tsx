@@ -26,7 +26,7 @@ import MemoriesContext from "../data/memories-context";
 
 const NewMemory: React.FC = () => {
     const [takenPhoto, setTakenPhoto] = useState<{
-        path: string;
+        path: string | undefined;
         preview: string;
     }>();
     const [chosenMemoryType, setChosenMemoryType] = useState<'good' | 'bad'>('good');
@@ -47,7 +47,7 @@ const NewMemory: React.FC = () => {
             quality: 80,
             width: 500
         });
-            if (!photo || !photo.path || !photo.webPath) {
+            if (!photo || !photo.webPath) {
                 return;
             }
 
