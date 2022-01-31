@@ -1,8 +1,8 @@
 import { CapacitorConfig } from '@capacitor/cli';
 
 const config: CapacitorConfig = {
-  appId: 'io.ionic.starter',
-  appName: 'camera-app',
+  appId: 'camera.app.memories',
+  appName: 'Memories',
   webDir: 'build',
   bundledWebRuntime: false
 };
