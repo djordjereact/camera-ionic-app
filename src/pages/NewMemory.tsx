@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useContext } from 'react';
 import {
     IonBackButton,
     IonButton,
@@ -21,6 +21,7 @@ import './NewMemory.css';
 import {Camera, CameraResultType, CameraSource} from '@capacitor/camera';
 import {Filesystem, FilesystemDirectory} from '@capacitor/filesystem';
 import { base64FromPath } from '@ionic/react-hooks/filesystem';
+import MemoriesContext from "../data/memories-context";
 
 const NewMemory: React.FC = () => {
     const [takenPhoto, setTakenPhoto] = useState<{
@@ -29,6 +30,8 @@ const NewMemory: React.FC = () => {
     }>();
     const [chosenMemoryType, setChosenMemoryType] = useState<'good' | 'bad'>('good');
     const titleRef = useRef<HTMLIonInputElement>(null);
+
+    const memoriesCtx = useContext(MemoriesContext);
 
     const selectMemoryTypeHandler = (event: CustomEvent) => {
         const selectedMemoryType = event.detail.value;
@@ -68,7 +71,7 @@ const NewMemory: React.FC = () => {
             directory: FilesystemDirectory.Data
         });
 
-
+        memoriesCtx.addMemory(fileName, enteredTitle.toString(), chosenMemoryType)
     };
 
     return (
