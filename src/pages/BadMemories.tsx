@@ -2,7 +2,7 @@ import React, {useContext} from 'react';
 import {
     IonButton,
     IonButtons, IonCol,
-    IonContent, IonFab, IonFabButton,
+    IonContent, IonFab, IonFabButton, IonGrid,
     IonHeader,
     IonIcon,
     IonPage, IonRow,
@@ -32,14 +32,16 @@ const BadMemories: React.FC = () => {
                 </IonToolbar>
             </IonHeader>
             <IonContent>
-                {badMemories.length === 0 &&
-                <IonRow>
-                    <IonCol className="ion-text-center">
-                        <h2>No bad memories found.</h2>
-                    </IonCol>
-                </IonRow>
-                }
-                <MemoriesList items={badMemories} />
+                <IonGrid>
+                    {badMemories.length === 0 &&
+                    <IonRow>
+                        <IonCol className="ion-text-center">
+                            <h2>No bad memories found.</h2>
+                        </IonCol>
+                    </IonRow>
+                    }
+                    <MemoriesList items={badMemories} />
+                </IonGrid>
                 {!isPlatform('ios') &&
                 <IonFab vertical="bottom" horizontal="end"  slot="fixed">
                     <IonFabButton routerLink="/new-memory">
