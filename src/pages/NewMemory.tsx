@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import {
     IonBackButton,
     IonButton,
@@ -12,19 +12,28 @@ import {
     IonItem,
     IonLabel,
     IonPage,
-    IonRow,
+    IonRow, IonSelect, IonSelectOption,
     IonTitle,
     IonToolbar
 } from "@ionic/react";
 import {camera} from "ionicons/icons";
 import './NewMemory.css';
 import {Camera, CameraResultType, CameraSource} from '@capacitor/camera';
+import {Filesystem, FilesystemDirectory} from '@capacitor/filesystem';
+import { base64FromPath } from '@ionic/react-hooks/filesystem';
 
 const NewMemory: React.FC = () => {
     const [takenPhoto, setTakenPhoto] = useState<{
         path: string;
         preview: string;
     }>();
+    const [chosenMemoryType, setChosenMemoryType] = useState<'good' | 'bad'>('good');
+    const titleRef = useRef<HTMLIonInputElement>(null);
+
+    const selectMemoryTypeHandler = (event: CustomEvent) => {
+        const selectedMemoryType = event.detail.value;
+        setChosenMemoryType(selectedMemoryType);
+    };
 
     const takePhotoHandler = async () => {
             const photo = await Camera.getPhoto({
@@ -40,7 +49,26 @@ const NewMemory: React.FC = () => {
             setTakenPhoto({
                 path: photo.path,
                 preview: photo.webPath
-            })
+            });
+    };
+
+    const addMemoryHandler = async () => {
+        const enteredTitle = titleRef.current?.value;
+
+        if (!enteredTitle || enteredTitle.toString().trim().length === 0 || !takenPhoto || !chosenMemoryType) {
+            return;
+        }
+
+        const fileName = new Date().getTime() + '.jpeg';
+
+        const base64 = await base64FromPath(takenPhoto!.preview)
+        Filesystem.writeFile({
+            path: fileName,
+            data: base64,
+            directory: FilesystemDirectory.Data
+        });
+
+
     };
 
     return (
@@ -59,8 +87,16 @@ const NewMemory: React.FC = () => {
                         <IonCol>
                             <IonItem>
                                 <IonLabel position="floating">Memory Title</IonLabel>
-                                <IonInput type="text"></IonInput>
+                                <IonInput type="text" ref={titleRef}></IonInput>
                             </IonItem>
+                        </IonCol>
+                    </IonRow>
+                    <IonRow>
+                        <IonCol>
+                            <IonSelect onIonChange={selectMemoryTypeHandler} value={chosenMemoryType}>
+                                <IonSelectOption value="good">Good Memory</IonSelectOption>
+                                <IonSelectOption value="bad">Bad Memory</IonSelectOption>
+                            </IonSelect>
                         </IonCol>
                     </IonRow>
                     <IonRow className="ion-text-center">
@@ -77,7 +113,7 @@ const NewMemory: React.FC = () => {
                     </IonRow>
                     <IonRow className="ion-margin-top">
                         <IonCol className="ion-text-center">
-                            <IonButton>Add Memory</IonButton>
+                            <IonButton onClick={addMemoryHandler}>Add Memory</IonButton>
                         </IonCol>
                     </IonRow>
                 </IonGrid>
